@@ -2,7 +2,7 @@
 Generator tabeli: client_addresses
 
 Kolumny docelowe:
-  client_id | address_id | country | city | postal_code |
+  client_id | address_id | country | state | city | postal_code |
   street | building_number | apartment_number | address_type
 
 Logika:
@@ -10,11 +10,12 @@ Logika:
   - VIP ma 60% szans na 2. adres.
   - Pozostałe segmenty mają mniejszą szansę na drugi adres.
   - address_type: billing / shipping
+  - Pierwszy adres to billing, każdy kolejny to shipping.
 """
 
 import random
 from faker import Faker
-from ecommerce_generator.config import FAKER_LOCALE
+from ecommerce_generator.config import FAKER_LOCALE, US_STATES
 
 fake = Faker(FAKER_LOCALE)
 
@@ -49,6 +50,7 @@ def generate_addresses(clients: list[dict]) -> list[dict]:
                 "address_id": address_id,
                 "client_id": client["client_id"],
                 "country": "United States",
+                "state": random.choice(US_STATES),
                 "city": fake.city(),
                 "postal_code": fake.postcode(),
                 "street": fake.street_name(),

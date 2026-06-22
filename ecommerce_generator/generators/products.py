@@ -9,7 +9,7 @@ import random
 import string
 from datetime import datetime
 from faker import Faker
-from ecommerce_generator.config import FAKER_LOCALE, CATALOG, PRODUCT_COLORS, SCREEN_SIZES, PRODUCT_START_DATE
+from ecommerce_generator.config import FAKER_LOCALE, CATALOG, PRODUCT_START_DATE
 
 fake = Faker(FAKER_LOCALE)
 
@@ -29,21 +29,29 @@ def _random_model_code() -> str:
     return random.choice(patterns)()
 
 
-def build_product_name(template: str, brand: str) -> str:
+def build_product_name(template: str, brand: str, screen_sizes: list[str] | None) -> str:
     """
     Buduje nazwę produktu na podstawie szablonu i marki.
+
+    Args:
+        template:     szablon nazwy produktu
+        brand:        nazwa marki
+        screen_sizes: lista rozmiarów ekranów właściwych dla kategorii,
+                      lub None jeśli kategoria nie używa {size}
     """
+    size = random.choice(screen_sizes) if screen_sizes else ""
     return template.format(
         brand=brand,
         model=_random_model_code(),
-        size=random.choice(SCREEN_SIZES),
-        color=random.choice(PRODUCT_COLORS),
+        size=size,
     )
 
 
 def generate_products(n: int) -> list[dict]:
     """
     Generuje n produktów z katalogu elektroniki.
+    Kategoria jest losowana z wagami proporcjonalnymi do liczby szablonów,
+    zamiast round-robin, by uniknąć sztywnego podziału po równo.
 
     Args:
         n: liczba produktów do wygenerowania
@@ -52,19 +60,23 @@ def generate_products(n: int) -> list[dict]:
         Lista słowników reprezentujących wiersze tabeli products.
     """
     categories = list(CATALOG.keys())
+    # Wagi proporcjonalne do liczby szablonów w kategorii
+    weights = [len(CATALOG[cat]["templates"]) for cat in categories]
+
     products = []
     product_id = 1
 
     start_dt = datetime.fromisoformat(PRODUCT_START_DATE)
     end_dt = datetime.now()
 
-    for i in range(n):
-        category = categories[i % len(categories)]
+    for _ in range(n):
+        category = random.choices(categories, weights=weights, k=1)[0]
         category_cfg = CATALOG[category]
 
         brand = random.choice(category_cfg["brands"])
         template = random.choice(category_cfg["templates"])
-        product_name = build_product_name(template, brand)
+        screen_sizes = category_cfg.get("screen_sizes")
+        product_name = build_product_name(template, brand, screen_sizes)
 
         lo, hi = category_cfg["price_range"]
         unit_price = round(random.uniform(lo, hi), 2)

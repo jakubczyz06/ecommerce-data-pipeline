@@ -51,29 +51,21 @@ SEGMENTS = {
     "VIP": {
         "weight": 0.10,
         "orders_range": (15, 40),
-        "avg_spend_multiplier": 2.5,
-        "basket_range": (500, 4000),
         "dormant": False,
     },
     "Regular": {
         "weight": 0.25,
         "orders_range": (5, 15),
-        "avg_spend_multiplier": 1.2,
-        "basket_range": (150, 1200),
         "dormant": False,
     },
     "Occasional": {
         "weight": 0.40,
         "orders_range": (2, 5),
-        "avg_spend_multiplier": 0.8,
-        "basket_range": (30, 500),
         "dormant": False,
     },
     "Dormant": {
         "weight": 0.25,
         "orders_range": (1, 2),
-        "avg_spend_multiplier": 0.6,
-        "basket_range": (20, 200),
         "dormant": True,
     },
 }
@@ -109,11 +101,6 @@ SEGMENT_CATEGORY_PREFERENCES = {
 ORDER_STATUSES = ["completed", "shipped", "processing", "cancelled"]
 ORDER_STATUS_WEIGHTS = [60, 20, 15, 5]
 
-# ── Dodatkowe zakresy dla zamówień ────────────────────────────────────────────
-
-ORDER_ITEMS_PER_ORDER = (1, 5)
-QUANTITY_RANGE = (1, 3)
-
 # ── Lista stanów USA ──────────────────────────────────────────────────────────
 
 US_STATES = [
@@ -127,13 +114,13 @@ US_STATES = [
 #
 # Struktura każdej kategorii:
 #
-# "brands"    → marki charakterystyczne dla tej kategorii
-# "templates" → szablony nazw produktów
-# {brand}     → zastępowane losową marką z listy "brands"
-# {model}     → zastępowane losowym kodem modelu (np. "X-490")
-# {size}      → zastępowane losowym rozmiarem ekranu (np. '15.6"')
-# {color}     → zastępowane losowym kolorem
-# "price_range" → (min, max) w USD
+# "brands"       → marki charakterystyczne dla tej kategorii
+# "templates"    → szablony nazw produktów
+# {brand}        → zastępowane losową marką z listy "brands"
+# {model}        → zastępowane losowym kodem modelu (np. "X-490")
+# {size}         → zastępowane losowym rozmiarem ekranu z "screen_sizes"
+# "price_range"  → (min, max) w USD
+# "screen_sizes" → rozmiary ekranów właściwe dla tej kategorii (jeśli używane)
 #
 # Szablony bez {brand} to produkty, gdzie marka nie wchodzi w nazwę
 # (np. akcesoria typu "USB-C Cable 6ft").
@@ -158,6 +145,7 @@ CATALOG: dict[str, dict] = {
             '{brand} {model} Ultrabook {size}',
         ],
         "price_range": (499, 3_499),
+        "screen_sizes": ['13"', '14"', '15.6"', '16"'],
     },
     "Tablets": {
         "brands": ["Apple", "Samsung", "Microsoft", "Lenovo", "Amazon"],
@@ -167,6 +155,7 @@ CATALOG: dict[str, dict] = {
             "{brand} {model} Tab Pro",
         ],
         "price_range": (149, 1_299),
+        "screen_sizes": ['8"', '10.2"', '10.9"', '11"', '12.9"'],
     },
     "Headphones & Audio": {
         "brands": ["Sony", "Bose", "Apple", "Sennheiser", "JBL", "Jabra"],
@@ -209,6 +198,7 @@ CATALOG: dict[str, dict] = {
             '{brand} {model} {size} Curved Gaming Monitor',
         ],
         "price_range": (199, 4_999),
+        "screen_sizes": ['43"', '55"', '65"', '75"', '85"'],
     },
     "Gaming": {
         "brands": ["Sony", "Microsoft", "Nintendo", "Razer", "SteelSeries", "Logitech"],
@@ -247,32 +237,3 @@ CATALOG: dict[str, dict] = {
         "price_range": (5, 99),
     },
 }
-
-# Kolory używane w szablonach produktów ({color})
-
-PRODUCT_COLORS = [
-    "Midnight Black",
-    "Arctic White",
-    "Silver",
-    "Space Gray",
-    "Navy Blue",
-    "Rose Gold",
-    "Graphite",
-    "Starlight",
-]
-
-# Rozmiary ekranów używane w szablonach ({size})
-
-SCREEN_SIZES = [
-    '13"',
-    '14"',
-    '15.6"',
-    '16"',
-    '24"',
-    '27"',
-    '32"',
-    '43"',
-    '55"',
-    '65"',
-    '75"',
-]
