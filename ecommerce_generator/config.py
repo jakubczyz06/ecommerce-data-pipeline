@@ -293,8 +293,6 @@ CATALOG: dict[str, list[dict]] = {
     ],
 
     # TVs & Displays (8 SKUs)
-    # Each SKU carries its own `variants` list so TVs and monitors
-    # don't share the same (often nonsensical) resolution/refresh combos.
     "TVs & Displays": [
         {"brand": "Samsung", "name": 'Neo QLED QN90D 55"',       "price": (1199, 1599), "screen_size": '55"',
          "variants": ["4K — 60Hz", "4K — 120Hz"]},

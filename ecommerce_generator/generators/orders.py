@@ -65,17 +65,13 @@ def _adjust_counts_to_target(counts: list[int], target_orders: int) -> list[int]
             f"target_orders ({target_orders}) must be >= number of clients ({len(counts)})"
         )
 
-    arr  = np.maximum(np.array(counts, dtype=np.int64), 1)
+    arr  = np.maximum(np.array(counts, dtype = np.int64), 1)
     diff = int(target_orders - arr.sum())
 
     if diff > 0:
-        # Distribute extra orders randomly — O(diff), no loop needed
         indices = np.random.choice(len(arr), size=diff, replace=True)
         np.add.at(arr, indices, 1)
     elif diff < 0:
-        # Reduce only from elements > 1 to avoid dropping any client to 0 orders.
-        # One pass per batch of reducible indices — avoids the clamp-then-recount bug
-        # where np.maximum(arr, 1) would silently restore zeros and break the sum.
         diff = abs(diff)
         while diff > 0:
             reducible = np.where(arr > 1)[0]
@@ -151,7 +147,7 @@ def generate_orders(clients: list[dict], target_orders: int) -> list[dict]:
                 "order_date":   _order_date(segment, registered_since).isoformat(),
                 "order_status": random.choices(
                     ORDER_STATUSES,
-                    weights=ORDER_STATUS_WEIGHTS,
+                    weights = ORDER_STATUS_WEIGHTS,
                     k = 1,
                 )[0],
             })

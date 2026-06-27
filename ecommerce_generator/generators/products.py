@@ -16,24 +16,31 @@ Logic:
     does not use this field, e.g. headphones).
 """
 
+
+
 # Imports
 import random
 from datetime import datetime
 from faker import Faker
 from ecommerce_generator.config import CATALOG, FAKER_LOCALE, PRODUCT_START_DATE
 
+
+
+
+
 # Faker configuration
 fake = Faker(FAKER_LOCALE)
 
-# Categories where storage variants make sense
-# Smartphones (8 SKU × 4) = 32 | Tablets (7 × 4) = 28
+
+
+
+
+# Creation of various configurations
 STORAGE_VARIANTS: dict[str, list[str]] = {
     "Smartphones": ["128GB", "256GB", "512GB", "1TB"],
     "Tablets":     ["64GB", "128GB", "256GB", "512GB"],
 }
 
-# Laptops get storage × RAM combos — most realistic for spec-driven electronics
-# 9 SKUs × 6 configs = 54 unique laptop rows
 LAPTOP_CONFIGS: list[str] = [
     "8GB / 256GB SSD",
     "16GB / 512GB SSD",
@@ -43,10 +50,6 @@ LAPTOP_CONFIGS: list[str] = [
     "64GB / 2TB SSD",
 ]
 
-# Categories where color variants make sense
-# Wearables (6 × 4) = 24 | Headphones (8 × 3) = 24 | Gaming (8 × 2) = 16
-# Cameras (7 × 2) = 14 — Body Only vs Kit | Smart Home (7 × 2) = 14
-# Accessories (9 × 2) = 18
 COLOR_VARIANTS: dict[str, list[str]] = {
     "Smartwatches & Wearables": ["Midnight", "Starlight", "Silver", "Blue"],
     "Headphones & Audio":       ["Black", "White", "Midnight Blue"],
@@ -55,31 +58,14 @@ COLOR_VARIANTS: dict[str, list[str]] = {
     "Accessories & Cables":     ["Black", "White", "Dark Gray"],
 }
 
-# Cameras: Body Only vs Kit (with lens) — 7 × 2 = 14
 CAMERA_VARIANTS: list[str] = ["Body Only", "with 24-70mm Kit Lens"]
 
-# TV and monitor variants are now defined per-SKU directly in CATALOG (config.py)
-# to avoid nonsensical combos like "Dell 27" Monitor 8K — 144Hz".
-# This constant is kept only as documentation of the old approach.
-# _TV_VARIANTS_REMOVED = ["4K", "8K", "4K — 120Hz", "8K — 144Hz"]
 
 
+
+
+# Expanding the catalog into a deduplicated list of unique SKUs
 def _expand_skus() -> list[dict]:
-    """
-    Expand the catalog into a deduplicated list of unique SKUs.
-
-    Expansion rules per category:
-      - Smartphones / Tablets → storage variants (128GB … 1TB)
-      - Laptops               → RAM + SSD combos (8GB/256GB … 64GB/2TB)
-      - Cameras               → Body Only vs Kit Lens
-      - Wearables / Headphones / Gaming / Smart Home / Accessories → color variants
-      - TVs & Displays        → kept as-is (model names already include screen size)
-
-    Total unique SKUs produced: ~300, enough to fill LARGE mode without duplicates.
-
-    Returns:
-        List of unique product dicts ready for generate_products() to sample from.
-    """
     expanded: list[dict] = []
 
     for category, skus in CATALOG.items():
@@ -103,9 +89,6 @@ def _expand_skus() -> list[dict]:
                     expanded.append({**base, "name": f"{sku['name']} — {color}"})
 
             else:
-                # TVs & Displays — each SKU carries its own variants list in config.py
-                # e.g. OLED TV gets ["4K — 120Hz", "8K"] while a 27" monitor gets
-                # ["4K — 60Hz", "4K — 144Hz"] — no nonsensical combos.
                 for variant in sku.get("variants", [sku["name"]]):
                     name = f"{sku['name']} — {variant}" if sku.get("variants") else sku["name"]
                     expanded.append({**base, "name": name})
@@ -113,31 +96,25 @@ def _expand_skus() -> list[dict]:
     return expanded
 
 
-# Build once at module import — reused across all generate_products() calls
+
+
+
+# Build once at module import - reused across all generate_products() calls
 _EXPANDED_SKUS: list[dict] = _expand_skus()
 
 
+
+
+
+# Generation of the fake products
 def generate_products(n: int) -> list[dict]:
-    """
-    Generate n unique product rows.
+    import warnings
 
-    If n <= number of expanded unique SKUs: sample without replacement (zero duplicates).
-    If n >  number of expanded unique SKUs: n is capped to the number of available
-    unique SKUs and a warning is printed. In practice LARGE mode (300) fits within
-    the ~279 expanded SKUs, so this guard is a safety net only.
-
-    Args:
-        n: number of products to generate
-
-    Returns:
-        List of dicts representing rows of the products table.
-    """
     start_dt    = datetime.fromisoformat(PRODUCT_START_DATE)
     end_dt      = datetime.now()
     unique_count = len(_EXPANDED_SKUS)
 
     if n > unique_count:
-        import warnings
         warnings.warn(
             f"Requested {n} products but only {unique_count} unique SKUs available. "
             f"Capping at {unique_count} to avoid duplicates.",

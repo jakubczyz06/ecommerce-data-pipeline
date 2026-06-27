@@ -44,8 +44,8 @@ logger.setLevel(logging.INFO)
 if not logger.handlers:
     file_handler = logging.FileHandler(
         LOG_PATH,
-        mode="a",
-        encoding="utf-8",
+        mode = "a",
+        encoding = "utf-8",
     )
 
     # Stream handler Docker/Console
@@ -161,8 +161,6 @@ def main() -> None:
     num_products = cfg["num_products"]
     num_orders = cfg["num_orders"]
 
-    # Set random seed BEFORE generating any data
-    # numpy has its own RNG state — must be seeded separately
     random.seed(seed)
     Faker.seed(seed)
     np.random.seed(seed)
