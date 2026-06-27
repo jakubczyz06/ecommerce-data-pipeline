@@ -1,7 +1,7 @@
-# ── Wygenerowane dane ─────────────────────────────────────────────────────────
+# Generated data
 data/
 
-# ── Python ────────────────────────────────────────────────────────────────────
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
@@ -18,14 +18,14 @@ sdist/
 wheels/
 *.spec
 
-# ── Środowiska wirtualne ──────────────────────────────────────────────────────
+# Virtual spaces
 .venv/
 venv/
 env/
 ENV/
 .env
 
-# ── IDE ───────────────────────────────────────────────────────────────────────
+# IDE
 .idea/
 .vscode/
 *.swp
@@ -33,7 +33,7 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# ── Testy / coverage ──────────────────────────────────────────────────────────
+# Tests
 .pytest_cache/
 .coverage
 htmlcov/
