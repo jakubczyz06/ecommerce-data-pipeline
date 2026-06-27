@@ -1,8 +1,11 @@
+# Imports
 import logging
 import sys
 from utils.paths import LOGS_DIR
 
 
+
+# Configuration of the logger
 def get_logger(module: str) -> logging.Logger:
     logger = logging.getLogger(module)
 
