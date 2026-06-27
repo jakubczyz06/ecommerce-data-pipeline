@@ -67,7 +67,7 @@ def _pick_product(
 ) -> dict | None:
     """
     With an 85% probability, it selects from the preferred categories,
-    otherwise (or if the preferred ones are exhausted) — from the entire catalog.
+    otherwise (or if the preferred ones are taken) - from the entire catalog.
     Returns None when all products have already been used in this order.
     """
     preferred_pool = [

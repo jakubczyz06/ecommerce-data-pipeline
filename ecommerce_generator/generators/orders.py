@@ -120,8 +120,8 @@ def _order_date(segment: str, registered_since: str) -> datetime:
         start_dt = now - timedelta(days=7)
 
     return fake.date_time_between_dates(
-        datetime_start=start_dt,
-        datetime_end=now,
+        datetime_start = start_dt,
+        datetime_end = now,
     )
 
 

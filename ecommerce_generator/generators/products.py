@@ -118,7 +118,7 @@ def generate_products(n: int) -> list[dict]:
         warnings.warn(
             f"Requested {n} products but only {unique_count} unique SKUs available. "
             f"Capping at {unique_count} to avoid duplicates.",
-            stacklevel=2,
+            stacklevel = 2,
         )
         n = unique_count
 
