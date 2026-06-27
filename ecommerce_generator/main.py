@@ -1,3 +1,9 @@
+"""
+Operational file of generating synthetic data
+"""
+
+
+
 # Imports
 import argparse
 import csv
@@ -5,6 +11,7 @@ import logging
 import os
 import random
 import time
+import sys
 from faker import Faker
 
 
@@ -24,7 +31,6 @@ from ecommerce_generator.generators.products import generate_products
 
 
 # Logger configuration
-
 LOG_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "ecommerce_generator.log",
@@ -37,17 +43,23 @@ logger.setLevel(logging.INFO)
 if not logger.handlers:
     file_handler = logging.FileHandler(
         LOG_PATH,
-        mode = "a",
-        encoding = "utf-8",
+        mode="a",
+        encoding="utf-8",
     )
+
+    # Stream handler Docker/Console
+    stream_handler = logging.StreamHandler(sys.stdout)
 
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        datefmt = "%Y-%m-%d %H:%M",
+        datefmt="%Y-%m-%d %H:%M",
     )
 
     file_handler.setFormatter(formatter)
+    stream_handler.setFormatter(formatter)
+
     logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
 
 
 

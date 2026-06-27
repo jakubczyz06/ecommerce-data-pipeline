@@ -11,10 +11,10 @@ Uwaga:
 
 import random
 import re
-
 from faker import Faker
 
 from ecommerce_generator.config import FAKER_LOCALE, SEGMENTS
+
 
 fake = Faker(FAKER_LOCALE)
 
