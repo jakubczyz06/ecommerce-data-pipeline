@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 import numpy as np
 from faker import Faker
 
-from ecommerce_generator.config import (
+from data_generator.config import (
     DORMANT_CUTOFF_DAYS,
     FAKER_LOCALE,
     ORDER_START_DATE,

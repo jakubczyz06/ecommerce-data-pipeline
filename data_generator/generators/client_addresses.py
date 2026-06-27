@@ -18,7 +18,7 @@ Logic:
 # Imports
 import random
 from faker import Faker
-from ecommerce_generator.config import FAKER_LOCALE, STATE_CITIES, US_STATES
+from data_generator.config import FAKER_LOCALE, STATE_CITIES, US_STATES
 
 
 

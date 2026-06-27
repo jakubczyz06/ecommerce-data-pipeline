@@ -16,7 +16,7 @@ import random
 import re
 from faker import Faker
 
-from ecommerce_generator.config import FAKER_LOCALE, SEGMENTS
+from data_generator.config import FAKER_LOCALE, SEGMENTS
 
 
 

@@ -7,20 +7,17 @@ Operational file of generating synthetic data
 # Imports
 import argparse
 import csv
-import logging
-import os
 import random
 import time
-import sys
 import numpy as np
 from faker import Faker
 
-
 from config import (
-CONFIG,
-OUTPUT_DIR,
-RANDOM_SEED,
+    CONFIG,
+    RANDOM_SEED,
 )
+from utils.logger import get_logger
+from utils.paths import DATA_DIR
 from generators.client_addresses import generate_addresses
 from generators.clients import generate_clients
 from generators.order_items import generate_order_items
@@ -31,36 +28,16 @@ from generators.products import generate_products
 
 
 
-# Logger configuration
-LOG_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "ecommerce_generator.log",
-)
+# Logger for "data_generator" module
+logger = get_logger("generator")
 
-logger = logging.getLogger("ecommerce_generator")
-logger.setLevel(logging.INFO)
 
-# Prevent duplicate handlers
-if not logger.handlers:
-    file_handler = logging.FileHandler(
-        LOG_PATH,
-        mode = "a",
-        encoding = "utf-8",
-    )
 
-    # Stream handler Docker/Console
-    stream_handler = logging.StreamHandler(sys.stdout)
 
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M",
-    )
 
-    file_handler.setFormatter(formatter)
-    stream_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
-    logger.addHandler(stream_handler)
+# Subdirectory for file generator
+GENERATOR_OUT = DATA_DIR / "generated_data"
+GENERATOR_OUT.mkdir(exist_ok = True)
 
 
 
@@ -105,14 +82,16 @@ def _ask_mode() -> str:
 
     print()
 
-    while True:
-        raw = input("Your choice (1 / 2 / 3): ").strip()
+    valid = [str(i) for i in range(1, len(VALID_MODES) + 1)]
 
-        if raw in ("1", "2", "3"):
+    while True:
+        raw = input(f"Your choice ({' / '.join(valid)}): ").strip()
+
+        if raw in valid:
             print()
             return VALID_MODES[int(raw) - 1]
 
-        print("Invalid option. Please enter 1, 2 or 3.")
+        print(f"Invalid option. Please enter {' or '.join(valid)}.")
 
 
 
@@ -126,8 +105,7 @@ def _save_csv(rows: list[dict], filename: str) -> None:
         logger.warning("No data to save: %s", filename)
         return
 
-    os.makedirs(OUTPUT_DIR, exist_ok = True)
-    path = os.path.join(OUTPUT_DIR, filename)
+    path = GENERATOR_OUT / filename
 
     with open(path, "w", newline = "", encoding = "utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=rows[0].keys())
@@ -144,22 +122,20 @@ def _save_csv(rows: list[dict], filename: str) -> None:
 
 
 
-
 # Main application
 def main() -> None:
     """Run the complete data generation pipeline."""
 
     args = _parse_args()
 
-    # Select mode from CLI or interactive prompt
     mode = args.mode or _ask_mode()
     seed = args.seed if args.seed is not None else RANDOM_SEED
 
     cfg = CONFIG[mode]
 
-    num_clients = cfg["num_clients"]
+    num_clients  = cfg["num_clients"]
     num_products = cfg["num_products"]
-    num_orders = cfg["num_orders"]
+    num_orders   = cfg["num_orders"]
 
     random.seed(seed)
     Faker.seed(seed)
@@ -199,28 +175,21 @@ def main() -> None:
 
     logger.info("Exporting CSV files...")
 
-    # Internal field used only during generation
     clients_export = [
         {k: v for k, v in client.items() if k != "_segment"}
         for client in clients
     ]
 
-    _save_csv(clients_export, "clients.csv")
-    _save_csv(addresses, "client_addresses.csv")
-    _save_csv(products, "products.csv")
-    _save_csv(orders, "orders.csv")
-    _save_csv(order_items, "order_items.csv")
+    _save_csv(clients_export,  "clients.csv")
+    _save_csv(addresses,       "client_addresses.csv")
+    _save_csv(products,        "products.csv")
+    _save_csv(orders,          "orders.csv")
+    _save_csv(order_items,     "order_items.csv")
 
     elapsed = time.perf_counter() - start_time
 
-    logger.info(
-        "Generation completed in %.2f seconds.",
-        elapsed,
-    )
-    logger.info("Output directory: %s/", OUTPUT_DIR)
-
-
-
+    logger.info("Generation completed in %.2f seconds.", elapsed)
+    logger.info("Output directory: %s/", GENERATOR_OUT)
 
 
 if __name__ == "__main__":

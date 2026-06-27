@@ -22,7 +22,7 @@ Logic:
 import random
 from datetime import datetime
 from faker import Faker
-from ecommerce_generator.config import CATALOG, FAKER_LOCALE, PRODUCT_START_DATE
+from data_generator.config import CATALOG, FAKER_LOCALE, PRODUCT_START_DATE
 
 
 

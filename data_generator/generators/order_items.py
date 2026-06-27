@@ -17,7 +17,7 @@ Logic:
 # Imports
 import random
 
-from ecommerce_generator.config import SEGMENT_CATEGORY_PREFERENCES
+from data_generator.config import SEGMENT_CATEGORY_PREFERENCES
 
 
 
