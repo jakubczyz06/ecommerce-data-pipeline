@@ -12,6 +12,7 @@ import os
 import random
 import time
 import sys
+import numpy as np
 from faker import Faker
 
 
@@ -161,8 +162,10 @@ def main() -> None:
     num_orders = cfg["num_orders"]
 
     # Set random seed BEFORE generating any data
+    # numpy has its own RNG state — must be seeded separately
     random.seed(seed)
     Faker.seed(seed)
+    np.random.seed(seed)
 
     logger.info("Generation mode: %s | Seed: %d", mode, seed)
     logger.info(

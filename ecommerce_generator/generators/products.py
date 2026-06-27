@@ -58,8 +58,10 @@ COLOR_VARIANTS: dict[str, list[str]] = {
 # Cameras: Body Only vs Kit (with lens) — 7 × 2 = 14
 CAMERA_VARIANTS: list[str] = ["Body Only", "with 24-70mm Kit Lens"]
 
-# TVs & Displays: resolution/refresh tiers — 8 SKUs × 4 = 32
-TV_VARIANTS: list[str] = ["4K", "8K", "4K — 120Hz", "8K — 144Hz"]
+# TV and monitor variants are now defined per-SKU directly in CATALOG (config.py)
+# to avoid nonsensical combos like "Dell 27" Monitor 8K — 144Hz".
+# This constant is kept only as documentation of the old approach.
+# _TV_VARIANTS_REMOVED = ["4K", "8K", "4K — 120Hz", "8K — 144Hz"]
 
 
 def _expand_skus() -> list[dict]:
@@ -101,23 +103,18 @@ def _expand_skus() -> list[dict]:
                     expanded.append({**base, "name": f"{sku['name']} — {color}"})
 
             else:
-                # TVs & Displays — resolution/refresh variants
-                for variant in TV_VARIANTS:
-                    expanded.append({**base, "name": f"{sku['name']} {variant}"})
+                # TVs & Displays — each SKU carries its own variants list in config.py
+                # e.g. OLED TV gets ["4K — 120Hz", "8K"] while a 27" monitor gets
+                # ["4K — 60Hz", "4K — 144Hz"] — no nonsensical combos.
+                for variant in sku.get("variants", [sku["name"]]):
+                    name = f"{sku['name']} — {variant}" if sku.get("variants") else sku["name"]
+                    expanded.append({**base, "name": name})
 
     return expanded
 
 
 # Build once at module import — reused across all generate_products() calls
 _EXPANDED_SKUS: list[dict] = _expand_skus()
-
-# Fallback pool: accessories with all color variants, used when n > len(_EXPANDED_SKUS)
-_FALLBACK_POOL: list[dict] = [
-    {**sku, "category": "Accessories & Cables", "name": f"{sku['name']} — {color}"}
-    for sku in CATALOG.get("Accessories & Cables", [])
-    for color in COLOR_VARIANTS.get("Accessories & Cables", ["Black", "White"])
-    if f"{sku['name']} — {color}" not in {s["name"] for s in _EXPANDED_SKUS}
-]
 
 
 def generate_products(n: int) -> list[dict]:

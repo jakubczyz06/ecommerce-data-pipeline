@@ -61,6 +61,13 @@ def generate_addresses(clients: list[dict]) -> list[dict]:
         for idx in range(num_addresses):
             state, city = _random_state_and_city()
 
+            if num_addresses == 1:
+                addr_type = "billing_and_shipping"
+            elif idx == 0:
+                addr_type = "billing"
+            else:
+                addr_type = "shipping"
+
             addresses.append({
                 "address_id":       address_id,
                 "client_id":        client["client_id"],
@@ -73,7 +80,7 @@ def generate_addresses(clients: list[dict]) -> list[dict]:
                 "apartment_number": (
                     str(random.randint(1, 999)) if random.random() < 0.45 else None
                 ),
-                "address_type": "billing" if idx == 0 else "shipping",
+                "address_type": addr_type,
             })
             address_id += 1
 

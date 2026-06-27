@@ -74,22 +74,18 @@ SEGMENTS = {
     "VIP": {
         "weight":       0.10,
         "orders_range": (15, 40),
-        "dormant":      False,
     },
     "Regular": {
         "weight":       0.25,
         "orders_range": (5, 15),
-        "dormant":      False,
     },
     "Occasional": {
         "weight":       0.40,
         "orders_range": (2, 5),
-        "dormant":      False,
     },
     "Dormant": {
         "weight":       0.25,
         "orders_range": (1, 2),
-        "dormant":      True,
     },
 }
 
@@ -297,15 +293,25 @@ CATALOG: dict[str, list[dict]] = {
     ],
 
     # TVs & Displays (8 SKUs)
+    # Each SKU carries its own `variants` list so TVs and monitors
+    # don't share the same (often nonsensical) resolution/refresh combos.
     "TVs & Displays": [
-        {"brand": "Samsung", "name": 'Neo QLED QN90D 55"',      "price": (1199, 1599), "screen_size": '55"'},
-        {"brand": "Samsung", "name": 'Neo QLED QN90D 65"',      "price": (1799, 2299), "screen_size": '65"'},
-        {"brand": "LG",      "name": 'OLED C4 55"',             "price": (1199, 1499), "screen_size": '55"'},
-        {"brand": "LG",      "name": 'OLED C4 65"',             "price": (1699, 1999), "screen_size": '65"'},
-        {"brand": "Sony",    "name": 'Bravia XR A95L 65"',      "price": (2499, 2999), "screen_size": '65"'},
-        {"brand": "LG",      "name": 'UltraGear 27" 4K Monitor',"price": (449,   599), "screen_size": '27"'},
-        {"brand": "Samsung", "name": 'Odyssey G7 32" Monitor',  "price": (499,   699), "screen_size": '32"'},
-        {"brand": "Dell",    "name": 'UltraSharp U2723D 27"',   "price": (499,   699), "screen_size": '27"'},
+        {"brand": "Samsung", "name": 'Neo QLED QN90D 55"',       "price": (1199, 1599), "screen_size": '55"',
+         "variants": ["4K — 60Hz", "4K — 120Hz"]},
+        {"brand": "Samsung", "name": 'Neo QLED QN90D 65"',       "price": (1799, 2299), "screen_size": '65"',
+         "variants": ["4K — 60Hz", "4K — 120Hz", "8K — 60Hz"]},
+        {"brand": "LG",      "name": 'OLED C4 55"',              "price": (1199, 1499), "screen_size": '55"',
+         "variants": ["4K — 120Hz"]},
+        {"brand": "LG",      "name": 'OLED C4 65"',              "price": (1699, 1999), "screen_size": '65"',
+         "variants": ["4K — 120Hz"]},
+        {"brand": "Sony",    "name": 'Bravia XR A95L 65"',       "price": (2499, 2999), "screen_size": '65"',
+         "variants": ["4K — 120Hz", "8K — 120Hz"]},
+        {"brand": "LG",      "name": 'UltraGear 27" 4K Monitor', "price": (449,   599), "screen_size": '27"',
+         "variants": ["4K — 60Hz", "4K — 144Hz"]},
+        {"brand": "Samsung", "name": 'Odyssey G7 32" Monitor',   "price": (499,   699), "screen_size": '32"',
+         "variants": ["4K — 144Hz", "4K — 240Hz"]},
+        {"brand": "Dell",    "name": 'UltraSharp U2723D 27"',    "price": (499,   699), "screen_size": '27"',
+         "variants": ["4K — 60Hz"]},
     ],
 
     # Gaming (8 SKUs)
