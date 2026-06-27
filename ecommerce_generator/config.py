@@ -29,9 +29,9 @@ CONFIG = {
         "num_orders":   8_000,
     },
     "LARGE": {
-        "label":        "Large (5,000 clients / 300 products / 50,000 orders)",
+        "label":        "Large (5,000 clients / 279 products / 50,000 orders)",
         "num_clients":  5_000,
-        "num_products":   300,
+        "num_products":   279,
         "num_orders":  50_000,
     },
 }

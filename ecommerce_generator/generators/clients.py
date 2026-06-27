@@ -67,7 +67,7 @@ def generate_clients(n: int) -> list[dict]:
             "client_id":         client_id,
             "full_name":         f"{first_name} {last_name}",
             "gender":            gender,
-            "phone_number":      fake.phone_number(),
+            "phone_number":      fake.numerify("(###) ###-####"),
             "email":             _build_email(first_name, last_name, client_id),
             "registration_date": fake.date_between(
                 start_date = "-3y",

@@ -15,16 +15,16 @@ import sys
 from faker import Faker
 
 
-from ecommerce_generator.config import (
+from config import (
 CONFIG,
 OUTPUT_DIR,
 RANDOM_SEED,
 )
-from ecommerce_generator.generators.client_addresses import generate_addresses
-from ecommerce_generator.generators.clients import generate_clients
-from ecommerce_generator.generators.order_items import generate_order_items
-from ecommerce_generator.generators.orders import generate_orders
-from ecommerce_generator.generators.products import generate_products
+from generators.client_addresses import generate_addresses
+from generators.clients import generate_clients
+from generators.order_items import generate_order_items
+from generators.orders import generate_orders
+from generators.products import generate_products
 
 
 
