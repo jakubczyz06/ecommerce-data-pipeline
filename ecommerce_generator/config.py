@@ -1,65 +1,65 @@
 """
-Centralna konfiguracja generatora danych e-commerce.
+Central configuration for the e-commerce data generator.
 
-Sklep: elektronika użytkowa (USA)
-Język: en_US
+Store: Consumer Electronics (USA)
+Locale: en_US
 """
 
-# ── Język Fakera ──────────────────────────────────────────────────────────────
+# ── Faker Locale ──────────────────────────────────────────────────────────────
 
 FAKER_LOCALE = "en_US"
 
-# ── Tryby generowania ─────────────────────────────────────────────────────────
+# ── Generation Modes ──────────────────────────────────────────────────────────
 #
-# MODE nie jest hardcodowany — wybierany interaktywnie przez CLI w main.py.
-# Można też podać jako argument: python -m ecommerce_generator.main --mode LARGE
+# MODE is not hardcoded — it is selected interactively via CLI in main.py.
+# Can also be provided as an argument: python -m ecommerce_generator.main --mode LARGE
 
 CONFIG = {
     "SMALL": {
-        "label":        "Small  —  100 klientów / 20 produktów / 500 zamówień",
+        "label":        "Small  —  100 clients / 20 products / 500 orders",
         "num_clients":  100,
         "num_products":  20,
         "num_orders":   500,
     },
     "MEDIUM": {
-        "label":        "Medium — 1 000 klientów / 100 produktów / 8 000 zamówień",
+        "label":        "Medium — 1,000 clients / 100 products / 8,000 orders",
         "num_clients":  1_000,
         "num_products":   100,
         "num_orders":   8_000,
     },
     "LARGE": {
-        "label":        "Large  — 5 000 klientów / 300 produktów / 50 000 zamówień",
+        "label":        "Large  — 5,000 clients / 300 products / 50,000 orders",
         "num_clients":  5_000,
         "num_products":   300,
         "num_orders":  50_000,
     },
 }
 
-# ── Katalog wyjściowy ─────────────────────────────────────────────────────────
+# ── Output Directory ──────────────────────────────────────────────────────────
 
 OUTPUT_DIR = "data"
 
-# ── Seed dla powtarzalności ───────────────────────────────────────────────────
+# ── Random Seed for Reproducibility ───────────────────────────────────────────
 #
-# Ustawiany w main.py PRZED pierwszym wywołaniem jakiegokolwiek generatora.
-# Ten sam seed + te same dane wejściowe = identyczny wynik.
+# Set in main.py BEFORE the first call to any generator.
+# Same seed + same input data = identical output.
 
 RANDOM_SEED = 42
 
-# ── Zakresy dat ───────────────────────────────────────────────────────────────
+# ── Date Ranges ───────────────────────────────────────────────────────────────
 
 PRODUCT_START_DATE = "2020-01-01"
 ORDER_START_DATE   = "2022-01-01"
 
-# ── Waluta ────────────────────────────────────────────────────────────────────
+# ── Currency ──────────────────────────────────────────────────────────────────
 
 CURRENCY = "USD"
 
-# ── Segmenty klientów ─────────────────────────────────────────────────────────
+# ── Client Segments ───────────────────────────────────────────────────────────
 #
-# weight        — prawdopodobieństwo przypisania segmentu nowemu klientowi
-# orders_range  — (min, max) liczby zamówień przed skalowaniem do target_orders
-# dormant       — czy segment jest traktowany jako nieaktywny
+# weight       — probability of assigning the segment to a new client
+# orders_range — (min, max) number of orders before scaling to target_orders
+# dormant      — whether the segment is treated as inactive
 
 SEGMENTS = {
     "VIP": {
@@ -93,12 +93,12 @@ SEGMENT_CATEGORY_PREFERENCES = {
     "Dormant":    ["Accessories & Cables", "Headphones & Audio"],
 }
 
-# ── Statusy zamówień ──────────────────────────────────────────────────────────
+# ── Order Statuses ────────────────────────────────────────────────────────────
 
 ORDER_STATUSES       = ["completed", "shipped", "processing", "cancelled"]
 ORDER_STATUS_WEIGHTS = [60, 20, 15, 5]
 
-# ── Geografia: stany i miasta USA ─────────────────────────────────────────────
+# ── Geography: US States and Cities ───────────────────────────────────────────
 
 STATE_CITIES: dict[str, list[str]] = {
     "CA": [
@@ -205,23 +205,23 @@ STATE_CITIES: dict[str, list[str]] = {
 
 US_STATES: list[str] = list(STATE_CITIES.keys())
 
-# ── Katalog produktów elektronicznych ────────────────────────────────────────
+# ── Electronics Product Catalog ───────────────────────────────────────────────
 #
-# Struktura: CATALOG[kategoria] = lista konkretnych produktów.
+# Structure: CATALOG[category] = list of specific products.
 #
-# Każdy produkt:
-#   "brand"       → nazwa producenta
-#   "name"        → pełna nazwa produktu (tak jak w sklepie)
-#   "price"       → (min, max) w USD — unit_price losowany z tego zakresu
-#   "screen_size" → (opcjonalne) przekątna ekranu, np. '13"'
+# Each product:
+#   "brand"       → manufacturer name
+#   "name"        → full product name (as seen in the store)
+#   "price"       → (min, max) in USD — unit_price is drawn from this range
+#   "screen_size" → (optional) screen diagonal, e.g., '13"'
 #
-# Uwaga: przy trybie LARGE (300 produktów) generator losuje z tej listy
-# z powtórzeniami — każde losowanie dostaje nowy product_id i datę dodania.
-# Katalog liczy ~70 unikalnych SKU, co jest realistyczne dla małego e-commerce.
+# Note: in LARGE mode (300 products), the generator picks from this list
+# with replacements — each draw gets a new product_id and creation date.
+# The catalog has ~70 unique SKUs, which is realistic for a small e-commerce.
 
 CATALOG: dict[str, list[dict]] = {
 
-    # ── Smartphones (8 SKU) ───────────────────────────────────────────────────
+    # ── Smartphones (8 SKUs) ──────────────────────────────────────────────────
     "Smartphones": [
         {"brand": "Apple",   "name": "iPhone 16",           "price": (799,  899)},
         {"brand": "Apple",   "name": "iPhone 16 Plus",      "price": (899,  999)},
@@ -233,7 +233,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Google",  "name": "Pixel 9 Pro",         "price": (799,  999)},
     ],
 
-    # ── Laptops (9 SKU) ───────────────────────────────────────────────────────
+    # ── Laptops (9 SKUs) ──────────────────────────────────────────────────────
     "Laptops": [
         {"brand": "Apple",     "name": "MacBook Air 13",      "price": (999,  1299), "screen_size": '13"'},
         {"brand": "Apple",     "name": "MacBook Air 15",      "price": (1199, 1499), "screen_size": '15"'},
@@ -246,7 +246,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Microsoft", "name": "Surface Laptop 5",    "price": (999,  1799), "screen_size": '13.5"'},
     ],
 
-    # ── Tablets (7 SKU) ───────────────────────────────────────────────────────
+    # ── Tablets (7 SKUs) ──────────────────────────────────────────────────────
     "Tablets": [
         {"brand": "Apple",     "name": "iPad mini 7",         "price": (499,  599),  "screen_size": '8.3"'},
         {"brand": "Apple",     "name": "iPad 10th Gen",       "price": (349,  449),  "screen_size": '10.9"'},
@@ -257,7 +257,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Microsoft", "name": "Surface Pro 10",      "price": (799, 1299),  "screen_size": '13"'},
     ],
 
-    # ── Headphones & Audio (8 SKU) ────────────────────────────────────────────
+    # ── Headphones & Audio (8 SKUs) ───────────────────────────────────────────
     "Headphones & Audio": [
         {"brand": "Apple",      "name": "AirPods 4",                  "price": (129, 179)},
         {"brand": "Apple",      "name": "AirPods Pro 2",              "price": (199, 249)},
@@ -269,7 +269,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Sennheiser", "name": "Momentum 4 Wireless",        "price": (279, 349)},
     ],
 
-    # ── Smartwatches & Wearables (6 SKU) ─────────────────────────────────────
+    # ── Smartwatches & Wearables (6 SKUs) ─────────────────────────────────────
     "Smartwatches & Wearables": [
         {"brand": "Apple",   "name": "Apple Watch Series 10", "price": (399, 499)},
         {"brand": "Apple",   "name": "Apple Watch Ultra 2",   "price": (749, 849)},
@@ -279,7 +279,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Garmin",  "name": "Fenix 7 Pro",           "price": (699, 899)},
     ],
 
-    # ── Cameras (7 SKU) ───────────────────────────────────────────────────────
+    # ── Cameras (7 SKUs) ──────────────────────────────────────────────────────
     "Cameras": [
         {"brand": "Sony",     "name": "Alpha A7 IV",    "price": (2299, 2799)},
         {"brand": "Sony",     "name": "ZV-E10 II",      "price": (699,   899)},
@@ -290,7 +290,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "GoPro",    "name": "HERO12 Black",   "price": (299,   399)},
     ],
 
-    # ── TVs & Displays (8 SKU) ────────────────────────────────────────────────
+    # ── TVs & Displays (8 SKUs) ───────────────────────────────────────────────
     "TVs & Displays": [
         {"brand": "Samsung", "name": 'Neo QLED QN90D 55"',      "price": (1199, 1599), "screen_size": '55"'},
         {"brand": "Samsung", "name": 'Neo QLED QN90D 65"',      "price": (1799, 2299), "screen_size": '65"'},
@@ -302,7 +302,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Dell",    "name": 'UltraSharp U2723D 27"',   "price": (499,   699), "screen_size": '27"'},
     ],
 
-    # ── Gaming (8 SKU) ────────────────────────────────────────────────────────
+    # ── Gaming (8 SKUs) ───────────────────────────────────────────────────────
     "Gaming": [
         {"brand": "Sony",        "name": "PlayStation 5 Slim",        "price": (399, 499)},
         {"brand": "Microsoft",   "name": "Xbox Series X",             "price": (449, 499)},
@@ -314,7 +314,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Logitech",    "name": "G915 TKL Keyboard",         "price": (159, 229)},
     ],
 
-    # ── Smart Home (7 SKU) ────────────────────────────────────────────────────
+    # ── Smart Home (7 SKUs) ───────────────────────────────────────────────────
     "Smart Home": [
         {"brand": "Amazon",  "name": "Echo Dot 5th Gen",          "price": (39,  59)},
         {"brand": "Amazon",  "name": "Echo Show 10",              "price": (199, 249)},
@@ -325,7 +325,7 @@ CATALOG: dict[str, list[dict]] = {
         {"brand": "Apple",   "name": "HomePod mini",              "price": (89,   99)},
     ],
 
-    # ── Accessories & Cables (9 SKU) ─────────────────────────────────────────
+    # ── Accessories & Cables (9 SKUs) ─────────────────────────────────────────
     "Accessories & Cables": [
         {"brand": "Anker",    "name": "MagSafe Wireless Charger 15W",    "price": (25,  45)},
         {"brand": "Anker",    "name": "Prime 27 000mAh Power Bank",      "price": (89, 129)},

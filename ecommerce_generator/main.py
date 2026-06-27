@@ -132,7 +132,7 @@ def _save_csv(rows: list[dict], filename: str) -> None:
 
 
 
-# ── Main application ──────────────────────────────────────────────────────────
+# Main application
 def main() -> None:
     """Run the complete data generation pipeline."""
 
