@@ -1,24 +1,47 @@
 """
-Generator tabeli: client_addresses
+Table generator: client_addresses
 
-Kolumny docelowe:
+Target columns:
   address_id | client_id | country | state | city | postal_code |
   street | building_number | apartment_number | address_type
 
-Logika:
-  - Każdy klient ma minimum 1 adres (billing).
-  - VIP: 60% szans na drugi adres (shipping); pozostałe segmenty mniej.
-  - Stan jest losowany z US_STATES, miasto — wyłącznie z listy miast
-    właściwej dla tego stanu (STATE_CITIES), co eliminuje niespójności
-    geograficzne, np. "New York, CA".
+Logic:
+  - Each client has a minimum of 1 address (billing).
+  - VIP: 60% chance for a second address (shipping); other segments have less.
+  - State is drawn from US_STATES, city - exclusively from the list of cities
+    appropriate for that state (STATE_CITIES), which eliminates geographical
+    inconsistencies, e.g. "New York, CA".
 """
 
+
+
+# Imports
 import random
 from faker import Faker
 from ecommerce_generator.config import FAKER_LOCALE, STATE_CITIES, US_STATES
 
+
+
+
+
+# Faker configuration
 fake = Faker(FAKER_LOCALE)
 
+
+
+
+
+# Returns a consistent pair (state, city) - the city comes from the list for the given state
+def _random_state_and_city() -> tuple[str, str]:
+    state = random.choice(US_STATES)
+    city  = random.choice(STATE_CITIES[state])
+    return state, city
+
+
+
+
+
+# Generating the fake customer's address
 SECOND_ADDRESS_PROBABILITY: dict[str, float] = {
     "VIP":        0.60,
     "Regular":    0.25,
@@ -26,24 +49,7 @@ SECOND_ADDRESS_PROBABILITY: dict[str, float] = {
     "Dormant":    0.05,
 }
 
-
-def _random_state_and_city() -> tuple[str, str]:
-    """Zwraca spójną parę (stan, miasto) — miasto pochodzi z listy dla danego stanu."""
-    state = random.choice(US_STATES)
-    city  = random.choice(STATE_CITIES[state])
-    return state, city
-
-
 def generate_addresses(clients: list[dict]) -> list[dict]:
-    """
-    Generuje adresy dla listy klientów.
-
-    Args:
-        clients: lista wygenerowana przez generators/clients.py
-
-    Returns:
-        Lista słowników reprezentujących wiersze tabeli client_addresses.
-    """
     addresses  = []
     address_id = 1
 

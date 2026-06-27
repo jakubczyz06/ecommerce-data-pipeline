@@ -1,25 +1,27 @@
 """
-Generator tabeli: orders
+Table generator: orders
 
-Kolumny docelowe:
+Target columns:
   order_id | client_id | order_date | order_status
 
-Logika:
-  - Liczba zamówień per klient wynika z segmentu (SEGMENTS.orders_range).
-  - Suma zamówień jest skalowana do target_orders przez _adjust_counts_to_target.
-  - Klienci Dormant mają zamówienia starsze niż DORMANT_CUTOFF_DAYS.
-  - order_date jest zawsze >= registration_date klienta (spójność temporalna).
+Logic:
+  - The number of orders per client depends on the segment (SEGMENTS.orders_range).
+  - The total number of orders is scaled to target_orders via _adjust_counts_to_target.
+  - Dormant clients have orders older than DORMANT_CUTOFF_DAYS.
+  - order_date is always >= client's registration_date (temporal consistency).
 
-Logika dat per segment:
-  - VIP       → zamówienia z ostatnich 120 dni (aktywni, świeże transakcje)
-  - Regular   → zamówienia z ostatnich 365 dni
-  - Occasional → zamówienia z ostatnich 540 dni
-  - Dormant   → zamówienia SPRZED DORMANT_CUTOFF_DAYS dni (nieaktywni)
+Date logic per segment:
+  - VIP       → orders from the last 120 days (active, fresh transactions)
+  - Regular   → orders from the last 365 days
+  - Occasional → orders from the last 540 days
+  - Dormant   → orders FROM BEFORE DORMANT_CUTOFF_DAYS days (inactive)
 """
 
+
+
+# Imports
 import random
 from datetime import datetime, timedelta
-
 import numpy as np
 from faker import Faker
 
@@ -32,11 +34,19 @@ from ecommerce_generator.config import (
     SEGMENTS,
 )
 
+
+
+
+
+# Faker configuration
 fake = Faker(FAKER_LOCALE)
 
 
+
+
+
+# Drawing a raw number of orders per client (before scaling to the target)
 def _raw_order_counts(clients: list[dict]) -> list[int]:
-    """Losuje surową liczbę zamówień per klient (przed skalowaniem do targetu)."""
     counts = []
     for client in clients:
         segment = client.get("_segment", "Regular")
@@ -45,45 +55,39 @@ def _raw_order_counts(clients: list[dict]) -> list[int]:
     return counts
 
 
-def _adjust_counts_to_target(counts: list[int], target_orders: int) -> list[int]:
-    """
-    Skaluje listę counts tak, żeby suma == target_orders.
 
-    Używa numpy zamiast pętli O(diff) — istotne przy trybie LARGE
-    (50 000 zamówień, diff może być rzędu dziesiątek tysięcy).
-    """
+
+
+# Scaling the counts list
+def _adjust_counts_to_target(counts: list[int], target_orders: int) -> list[int]:
     if target_orders < len(counts):
         raise ValueError(
-            f"target_orders ({target_orders}) musi być >= liczby klientów ({len(counts)})"
+            f"target_orders ({target_orders}) must be >= number of clients ({len(counts)})"
         )
 
-    arr  = np.maximum(np.array(counts, dtype=np.int64), 1)
+    arr  = np.maximum(np.array(counts, dtype = np.int64), 1)
     diff = int(target_orders - arr.sum())
 
     if diff != 0:
         indices = np.random.choice(len(arr), size=abs(diff), replace=True)
         np.add.at(arr, indices, 1 if diff > 0 else -1)
-        arr = np.maximum(arr, 1)  # zabezpieczenie przed zejściem do 0
+        arr = np.maximum(arr, 1)  # safeguard against dropping to 0
 
     return arr.tolist()
 
 
+
+
+
+# Returning an order date consistent with the segment and the client's registration
+# in ISO format
 def _order_date(segment: str, registered_since: str) -> datetime:
-    """
-    Zwraca datę zamówienia spójną z segmentem i datą rejestracji klienta.
-
-    Gwarancja: order_date >= max(ORDER_START_DATE, registration_date).
-
-    Args:
-        segment:          segment klienta
-        registered_since: data rejestracji w formacie ISO (YYYY-MM-DD)
-    """
     now             = datetime.now()
     registration_dt = datetime.fromisoformat(registered_since)
     start_dt        = datetime.fromisoformat(ORDER_START_DATE)
 
     if segment == "Dormant":
-        # Zamówienie musi być starsze niż DORMANT_CUTOFF_DAYS
+        # Order must be older than DORMANT_CUTOFF_DAYS
         end_dt = now - timedelta(days=DORMANT_CUTOFF_DAYS + 1)
         if end_dt <= start_dt:
             end_dt = start_dt + timedelta(days=1)
@@ -95,12 +99,12 @@ def _order_date(segment: str, registered_since: str) -> datetime:
             datetime_end=end_dt,
         )
 
-    # Aktywne segmenty — okno w przeszłość zależy od segmentu
+    # Active segments - lookback window depends on the segment
     lookback = {"VIP": 120, "Regular": 365, "Occasional": 540}
     days_back = lookback.get(segment, 365)
     start_dt  = max(start_dt, now - timedelta(days=days_back))
 
-    # Nie cofamy się przed datą rejestracji klienta
+    # Do not go back before the client's registration date
     start_dt = max(start_dt, registration_dt)
 
     if start_dt >= now:
@@ -112,17 +116,11 @@ def _order_date(segment: str, registered_since: str) -> datetime:
     )
 
 
+
+
+
+# Generating the fake orders
 def generate_orders(clients: list[dict], target_orders: int) -> list[dict]:
-    """
-    Generuje zamówienia dla wszystkich klientów.
-
-    Args:
-        clients:       lista z generators/clients.py
-        target_orders: docelowa łączna liczba zamówień
-
-    Returns:
-        Lista słowników reprezentujących wiersze tabeli orders.
-    """
     raw_counts = _raw_order_counts(clients)
     counts     = _adjust_counts_to_target(raw_counts, target_orders)
 
@@ -141,7 +139,7 @@ def generate_orders(clients: list[dict], target_orders: int) -> list[dict]:
                 "order_status": random.choices(
                     ORDER_STATUSES,
                     weights=ORDER_STATUS_WEIGHTS,
-                    k=1,
+                    k = 1,
                 )[0],
             })
             order_id += 1

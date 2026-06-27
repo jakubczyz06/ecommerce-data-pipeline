@@ -54,7 +54,7 @@ RANDOM_SEED = 42
 
 
 
-# Date Ranges
+# Date ranges
 PRODUCT_START_DATE = "2020-01-01"
 ORDER_START_DATE   = "2022-01-01"
 
@@ -69,7 +69,7 @@ CURRENCY = "USD"
 
 
 
-# Client Segments
+# Client segments
 SEGMENTS = {
     "VIP": {
         "weight":       0.10,
@@ -224,7 +224,7 @@ US_STATES: list[str] = list(STATE_CITIES.keys())
 
 
 
-# Electronics Product Catalog
+# Electronics product catalog
 CATALOG: dict[str, list[dict]] = {
 
     # Smartphones (8 SKUs)

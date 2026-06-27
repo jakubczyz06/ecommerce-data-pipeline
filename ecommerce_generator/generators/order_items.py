@@ -1,22 +1,29 @@
 """
-Generator tabeli: order_items
+Table generator: order_items
 
-Kolumny docelowe:
+Target columns:
   order_item_id | order_id | product_id | quantity | unit_price
 
-Logika:
-  - Liczba pozycji w zamówieniu i max ilość per pozycja zależą od segmentu.
-  - Produkty dobierane z preferowanych kategorii segmentu (85% szans),
-    w razie braku — fallback na dowolny dostępny produkt.
-  - Ten sam produkt nie może pojawić się dwa razy w jednym zamówieniu.
-  - unit_price = cena katalogowa ± 5% (symulacja rabatów / marży).
+Logic:
+  - The number of items in an order and max quantity per item depend on the segment.
+  - Products are chosen from the segment's preferred categories (85% chance),
+    otherwise — fallback to any available product.
+  - The same product cannot appear twice in a single order.
+  - unit_price = catalog price ± 5% (simulating discounts / margins).
 """
 
+
+
+# Imports
 import random
 
 from ecommerce_generator.config import SEGMENT_CATEGORY_PREFERENCES
 
-# Liczba pozycji w zamówieniu per segment
+
+
+
+
+# Number of items in an order per segment
 SEGMENT_ITEM_RANGE: dict[str, tuple[int, int]] = {
     "VIP":        (3, 5),
     "Regular":    (2, 4),
@@ -24,7 +31,11 @@ SEGMENT_ITEM_RANGE: dict[str, tuple[int, int]] = {
     "Dormant":    (1, 2),
 }
 
-# Maksymalna ilość sztuk jednej pozycji per segment
+
+
+
+
+# Maximum quantity of a single item per segment
 SEGMENT_QUANTITY_MAX: dict[str, int] = {
     "VIP":        3,
     "Regular":    2,
@@ -33,14 +44,21 @@ SEGMENT_QUANTITY_MAX: dict[str, int] = {
 }
 
 
+
+
+
+# Grouping products by category
 def _build_category_map(products: list[dict]) -> dict[str, list[dict]]:
-    """Grupuje produkty po kategoriach dla szybkiego losowania."""
     category_map: dict[str, list[dict]] = {}
     for product in products:
         category_map.setdefault(product["category"], []).append(product)
     return category_map
 
 
+
+
+
+# Selecting products basing on the categories
 def _pick_product(
     products: list[dict],
     category_map: dict[str, list[dict]],
@@ -48,11 +66,9 @@ def _pick_product(
     used_product_ids: set[int],
 ) -> dict | None:
     """
-    Wybiera produkt z uwzględnieniem preferencji kategorii segmentu.
-
-    Z prawdopodobieństwem 85% wybiera z preferowanych kategorii,
-    w przeciwnym razie (lub gdy preferowane są wyczerpane) — z całego katalogu.
-    Zwraca None gdy wszystkie produkty zostały już użyte w tym zamówieniu.
+    With an 85% probability, it selects from the preferred categories,
+    otherwise (or if the preferred ones are exhausted) — from the entire catalog.
+    Returns None when all products have already been used in this order.
     """
     preferred_pool = [
         p
@@ -72,22 +88,16 @@ def _pick_product(
     return None
 
 
+
+
+
+# Generating the order items
 def generate_order_items(
     orders:   list[dict],
     products: list[dict],
     clients:  list[dict],
 ) -> list[dict]:
-    """
-    Generuje pozycje zamówień.
 
-    Args:
-        orders:   lista z generators/orders.py
-        products: lista z generators/products.py
-        clients:  lista z generators/clients.py
-
-    Returns:
-        Lista słowników reprezentujących wiersze tabeli order_items.
-    """
     client_segment = {c["client_id"]: c.get("_segment", "Regular") for c in clients}
     category_map   = _build_category_map(products)
 
@@ -105,10 +115,10 @@ def generate_order_items(
 
         for _ in range(num_items):
             product = _pick_product(
-                products=products,
-                category_map=category_map,
-                preferred_categories=preferred_categories,
-                used_product_ids=used_product_ids,
+                products = products,
+                category_map = category_map,
+                preferred_categories = preferred_categories,
+                used_product_ids = used_product_ids,
             )
             if product is None:
                 break
