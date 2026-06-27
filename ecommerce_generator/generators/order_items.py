@@ -7,9 +7,9 @@ Target columns:
 Logic:
   - The number of items in an order and max quantity per item depend on the segment.
   - Products are chosen from the segment's preferred categories (85% chance),
-    otherwise — fallback to any available product.
+    otherwise - fallback to any available product.
   - The same product cannot appear twice in a single order.
-  - unit_price = catalog price ± 5% (simulating discounts / margins).
+  - unit_price = catalog price +- 5% (simulating discounts / margins).
 """
 
 
