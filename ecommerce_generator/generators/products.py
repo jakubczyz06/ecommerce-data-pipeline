@@ -1,10 +1,3 @@
-"""
-Generator tabeli: products
-
-Kolumny docelowe:
-  product_id | product_name | category | brand | unit_price | created_at
-"""
-
 import random
 import string
 from datetime import datetime
@@ -30,15 +23,6 @@ def _random_model_code() -> str:
 
 
 def build_product_name(template: str, brand: str, screen_sizes: list[str] | None) -> str:
-    """
-    Buduje nazwę produktu na podstawie szablonu i marki.
-
-    Args:
-        template:     szablon nazwy produktu
-        brand:        nazwa marki
-        screen_sizes: lista rozmiarów ekranów właściwych dla kategorii,
-                      lub None jeśli kategoria nie używa {size}
-    """
     size = random.choice(screen_sizes) if screen_sizes else ""
     return template.format(
         brand=brand,
@@ -48,17 +32,6 @@ def build_product_name(template: str, brand: str, screen_sizes: list[str] | None
 
 
 def generate_products(n: int) -> list[dict]:
-    """
-    Generuje n produktów z katalogu elektroniki.
-    Kategoria jest losowana z wagami proporcjonalnymi do liczby szablonów,
-    zamiast round-robin, by uniknąć sztywnego podziału po równo.
-
-    Args:
-        n: liczba produktów do wygenerowania
-
-    Returns:
-        Lista słowników reprezentujących wiersze tabeli products.
-    """
     categories = list(CATALOG.keys())
     # Wagi proporcjonalne do liczby szablonów w kategorii
     weights = [len(CATALOG[cat]["templates"]) for cat in categories]
