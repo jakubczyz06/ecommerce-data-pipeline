@@ -1,5 +1,5 @@
 """
-Operational file of generating synthetic data
+Operational file of generating synthetic data.
 """
 
 
