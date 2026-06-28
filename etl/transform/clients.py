@@ -27,8 +27,9 @@ def transform_clients(df: pd.DataFrame) -> pd.DataFrame:
     df["registration_date"] = pd.to_datetime(df["registration_date"])
 
     # Standardizing
-    df["full_name"] = df["full_name"].astype(str).title()
+    df["full_name"] = df["full_name"].astype(str).rstrip().title()
     df["gender"] = df["gender"].astype(str).strip().capitalize()
+    df["phone_number"] = df["phone_number"].astype(str).rstrip()
     df["email"] = df["email"].astype(str).strip()
 
     # Male/Female -> M/F
@@ -48,7 +49,7 @@ def transform_clients(df: pd.DataFrame) -> pd.DataFrame:
     critical = ["client_id", "full_name", "email", "registration_date"]
     nulls = df[critical].isnull().sum()
     if nulls.any():
-        logger.warning("NULLs found in clients \n%s", nulls[nulls > 0])
+        logger.warning("NULLs found in 'clients' \n%s", nulls[nulls > 0])
 
 
     logger.info("Transforming 'clients' table dataframe - %s rows", len(df))
