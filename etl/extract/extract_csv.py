@@ -27,11 +27,19 @@ GENERATED_DIR = DATA_DIR / "generated"
 def extract_csv() -> dict[str, pd.DataFrame]:
     dataframes = {}
 
+    if not GENERATED_DIR.exists():
+        logger.error("Directory not found: %s", GENERATED_DIR)
+        return {}
+
+    if not any(GENERATED_DIR.glob("*.csv")):
+        logger.warning("No CSV files found in %s", GENERATED_DIR)
+        return {}
+
+    logger.info("Extracting data from %s", GENERATED_DIR)
     for file in GENERATED_DIR.glob("*.csv"):
         table_name = file.stem
         dataframes[table_name] = pd.read_csv(file)
         logger.info("Extracted %s - %s rows", table_name, len(dataframes[table_name]))
-
     return dataframes
 
 
