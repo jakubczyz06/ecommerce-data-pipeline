@@ -84,7 +84,7 @@ def upsert_dataframe_to_postgres(df: pd.DataFrame, table_name: str, engine, sche
         metadata = MetaData()
         table = Table(table_name, metadata, autoload_with=engine, schema=schema_name)
 
-        records = df.to_dict(orient="records")
+        records = df.to_dict(orient = "records")
 
         update_columns = {col: table.c[col] for col in df.columns if col != pk}
 
