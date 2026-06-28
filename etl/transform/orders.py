@@ -22,8 +22,8 @@ def transform_orders(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Transforming 'orders' dataframe - %s rows", len(df))
 
     # Casting types
-    df["order_id"] = df["product_id"].astype(int)
-    df["client_id"] = df["product_id"].astype(int)
+    df["order_id"] = df["order_id"].astype(int)
+    df["client_id"] = df["client_id"].astype(int)
 
     # Standardizing
     df["order_date"] = pd.to_datetime(df["order_date"])
@@ -33,7 +33,7 @@ def transform_orders(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop_duplicates(subset = "order_id")
 
     # Checking for NULLs
-    critical = ["order_id", "product_id", "order_date", "order_status"]
+    critical = ["order_id", "client_id", "order_date", "order_status"]
     nulls = df[critical].isnull().sum()
     if nulls.any():
         logger.warning("NULLs found in 'orders' \n%s", nulls[nulls > 0])
