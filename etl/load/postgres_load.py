@@ -46,7 +46,7 @@ def load_dataframe_to_postgres(df: pd.DataFrame, table_name: str, engine, schema
             name = table_name,
             con = engine,
             schema = schema_name,
-            if_exists = "append",
+            if_exists = "replace",
             index = False
         )
 

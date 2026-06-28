@@ -32,7 +32,7 @@ def transform_client_addresses(df: pd.DataFrame) -> pd.DataFrame:
     df["postal_code"] = df["postal_code"].astype(str).strip()
     df["street"] = df["street"].astype(str).rstrip()
     df["building_number"] = df["building_number"].astype(str).strip()
-    df["apartament_number"] = df["apartament_number"].str.strip()
+    df["apartment_number"] = df["apartament_number"].str.strip()
     df["address_type"] = df["address_type"].astype(str).rstrip()
 
     # Deleting duplicates
