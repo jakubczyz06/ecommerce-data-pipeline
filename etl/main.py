@@ -19,7 +19,7 @@ from etl.transform.orders import transform_orders
 from etl.transform.order_items import transform_order_items
 
 # Load
-from etl.load.postgres_load import get_db_engine, load_dataframe_to_postgres
+from etl.load.postgres_load import get_db_engine, load_dataframe_to_postgres, upsert_dataframe_to_postgres
 
 
 
@@ -49,8 +49,6 @@ def main():
         df_raw = df.astype(str)
         load_dataframe_to_postgres(df_raw, table_name, engine, schema_name = "raw")
 
-"""
-# IF EVERYTHING IS OK DELETE THE DOCSTRING
 
     logger.info("Transforming data")
     clean_dataframes = {}
@@ -74,7 +72,7 @@ def main():
         sys.exit(1)
 
 
-    logger.info("Loading to 'public' schema")
+    logger.info("Loading to 'public' schema (upsert)")
     tables_order = [
         "clients",
         "client_addresses",
@@ -84,11 +82,10 @@ def main():
     ]
     for table in tables_order:
         if table in clean_dataframes:
-            load_dataframe_to_postgres(clean_dataframes[table], table, engine, schema_name = "public")
+            upsert_dataframe_to_postgres(clean_dataframes[table], table, engine, schema_name = "public")
 
 
     logger.info("ETL pipeline successfully finished.")
-"""
 
 
 
