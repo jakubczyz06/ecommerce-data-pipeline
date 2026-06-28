@@ -72,7 +72,7 @@ def main():
         sys.exit(1)
 
 
-    logger.info("Loading to 'otlp' schema (upsert)")
+    logger.info("Loading to 'oltp' schema (upsert)")
     tables_order = [
         "clients",
         "client_addresses",
