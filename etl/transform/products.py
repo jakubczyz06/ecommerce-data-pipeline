@@ -27,8 +27,9 @@ def transform_products(df: pd.DataFrame) -> pd.DataFrame:
     # Standardizing
     df["product_name"] = df["product_name"].astype(str).rstrip()
     df["brand"] = df["brand"].astype(str).title().rstrip()
-    df["screen_size"] = df["screen_size"].astype(str).strip()
+    df["screen_size"] = df["screen_size"].str.strip()
     df["unit_price"] = df["unit_price"].astype(float).round(2)
+    df["created_at"] = pd.to_datetime(df["order_date"])
 
     # Deleting duplicates
     df = df.drop_duplicates(subset = "product_id")

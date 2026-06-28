@@ -22,8 +22,9 @@ def transform_order_items(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Transforming 'order_items' dataframe - %s rows", len(df))
 
     # Casting types
-    df["order_item_id"] = df["product_id"].astype(int)
-    df["client_id"] = df["product_id"].astype(int)
+    df["order_item_id"] = df["order_item_id"].astype(int)
+    df["order_id"] = df["order_id"].astype(int)
+    df["product_id"] = df["product_id"].astype(int)
     df["quantity"] = df["quantity"].astype(int)
 
     # Standardizing

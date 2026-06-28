@@ -22,13 +22,12 @@ def transform_orders(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Transforming 'orders' dataframe - %s rows", len(df))
 
     # Casting types
-    df["order_item_id"] = df["order_item_id"].astype(int)
     df["order_id"] = df["product_id"].astype(int)
     df["client_id"] = df["product_id"].astype(int)
-    df["product_id"] = df["product_id"].astype(int)
 
     # Standardizing
-    df["order_status"] = df["brand"].astype(str).lower().rstrip()
+    df["order_date"] = pd.to_datetime(df["order_date"])
+    df["order_status"] = df["order_status"].astype(str).str.strip().str.lower()
 
     # Deleting duplicates
     df = df.drop_duplicates(subset = "order_id")
