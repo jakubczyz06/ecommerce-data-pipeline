@@ -72,7 +72,7 @@ def main():
         sys.exit(1)
 
 
-    logger.info("Loading to 'public' schema (upsert)")
+    logger.info("Loading to 'otlp' schema (upsert)")
     tables_order = [
         "clients",
         "client_addresses",
@@ -82,7 +82,7 @@ def main():
     ]
     for table in tables_order:
         if table in clean_dataframes:
-            upsert_dataframe_to_postgres(clean_dataframes[table], table, engine, schema_name = "public")
+            upsert_dataframe_to_postgres(clean_dataframes[table], table, engine, schema_name = "oltp")
 
 
     logger.info("ETL pipeline successfully finished.")

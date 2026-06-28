@@ -18,7 +18,7 @@ logger = get_logger("extract_etl")
 
 
 # Subdirectory for generated files
-GENERATED_DIR = DATA_DIR / "generated"
+GENERATED_DIR = DATA_DIR / "generated_data"
 
 
 

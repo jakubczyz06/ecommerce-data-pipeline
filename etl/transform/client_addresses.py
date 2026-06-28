@@ -16,7 +16,6 @@ logger = get_logger("transform_etl")
 
 
 
-
 # Function transforming data with pandas
 def transform_client_addresses(df: pd.DataFrame) -> pd.DataFrame:
     logger.info("Transforming 'client addresses' dataframe - %s rows", len(df))
@@ -26,17 +25,17 @@ def transform_client_addresses(df: pd.DataFrame) -> pd.DataFrame:
     df["client_id"] = df["client_id"].astype(int)
 
     # Standardizing
-    df["country"] = df["country"].astype(str).title().rstrip()
-    df["state"] = df["state"].astype(str).upper().strip()
-    df["city"] = df["city"].astype(str).title()
-    df["postal_code"] = df["postal_code"].astype(str).strip()
-    df["street"] = df["street"].astype(str).rstrip()
-    df["building_number"] = df["building_number"].astype(str).strip()
-    df["apartment_number"] = df["apartament_number"].str.strip()
-    df["address_type"] = df["address_type"].astype(str).rstrip()
+    df["country"] = df["country"].astype(str).str.strip().str.title()
+    df["state"] = df["state"].astype(str).str.strip().str.upper()
+    df["city"] = df["city"].astype(str).str.strip().str.title()
+    df["postal_code"] = df["postal_code"].astype(str).str.strip()
+    df["street"] = df["street"].astype(str).str.strip()
+    df["building_number"] = df["building_number"].astype(str).str.strip()
+    df["apartment_number"] = df["apartment_number"].astype(str).str.strip().replace("nan", None)
+    df["address_type"] = df["address_type"].astype(str).str.strip()
 
     # Deleting duplicates
-    df = df.drop_duplicates(subset = "address_id")
+    df = df.drop_duplicates(subset="address_id")
 
     # Checking for NULLs
     critical = ["client_id", "address_id"]

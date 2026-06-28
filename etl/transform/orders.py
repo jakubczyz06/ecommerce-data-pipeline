@@ -27,7 +27,7 @@ def transform_orders(df: pd.DataFrame) -> pd.DataFrame:
 
     # Standardizing
     df["order_date"] = pd.to_datetime(df["order_date"])
-    df["order_status"] = df["order_status"].astype(str).str.strip().str.lower()
+    df["order_status"] = df["order_status"].astype(str).str.strip()
 
     # Deleting duplicates
     df = df.drop_duplicates(subset = "order_id")
