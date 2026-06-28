@@ -15,10 +15,7 @@ Note:
 import random
 import re
 from faker import Faker
-
 from data_generator.config import FAKER_LOCALE, SEGMENTS
-
-
 
 
 

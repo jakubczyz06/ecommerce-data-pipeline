@@ -26,8 +26,6 @@ from data_generator.config import CATALOG, FAKER_LOCALE, PRODUCT_START_DATE
 
 
 
-
-
 # Faker configuration
 fake = Faker(FAKER_LOCALE)
 

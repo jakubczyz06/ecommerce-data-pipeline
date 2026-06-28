@@ -22,8 +22,6 @@ from data_generator.config import FAKER_LOCALE, STATE_CITIES, US_STATES
 
 
 
-
-
 # Faker configuration
 fake = Faker(FAKER_LOCALE)
 

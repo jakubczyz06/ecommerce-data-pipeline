@@ -11,7 +11,6 @@ import random
 import time
 import numpy as np
 from faker import Faker
-
 from config import (
     CONFIG,
     RANDOM_SEED,
@@ -26,12 +25,8 @@ from generators.products import generate_products
 
 
 
-
-
 # Logger for "data_generator" module
 logger = get_logger("generator")
-
-
 
 
 

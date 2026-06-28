@@ -24,7 +24,6 @@ import random
 from datetime import datetime, timedelta
 import numpy as np
 from faker import Faker
-
 from data_generator.config import (
     DORMANT_CUTOFF_DAYS,
     FAKER_LOCALE,
@@ -33,8 +32,6 @@ from data_generator.config import (
     ORDER_STATUS_WEIGHTS,
     SEGMENTS,
 )
-
-
 
 
 

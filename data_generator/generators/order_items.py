@@ -16,7 +16,6 @@ Logic:
 
 # Imports
 import random
-
 from data_generator.config import SEGMENT_CATEGORY_PREFERENCES
 
 
