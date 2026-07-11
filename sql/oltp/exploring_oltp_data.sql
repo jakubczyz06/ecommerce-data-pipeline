@@ -9,7 +9,8 @@ SELECT *
 FROM oltp.order_items;
 
 SELECT *
-FROM oltp.orders;
+FROM oltp.orders
+ORDER BY order_date DESC;
 
 SELECT *
 FROM oltp.products;
