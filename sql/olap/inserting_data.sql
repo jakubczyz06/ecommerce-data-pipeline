@@ -1,5 +1,5 @@
 -- Inserting data into date dimension
-INSERT INTO olap.dim_date
+INSERT INTO olap.dim_date (date_id, date, year, quarter, month, month_name, week, day, day_name, if_workday)
 SELECT
     TO_CHAR(d, 'YYYYMMDD')::INT AS date_id,
     d::TIMESTAMP AS date,
@@ -25,7 +25,7 @@ FROM GENERATE_SERIES(
 
 
 -- Inserting data into clients dimension
-INSERT INTO olap.dim_clients
+INSERT INTO olap.dim_clients (client_id, full_name, gender, phone_number, email, registration_date, country, state, city)
 SELECT
     c.client_id,
     c.full_name,
@@ -46,7 +46,7 @@ LEFT JOIN oltp.client_addresses AS ca
 
 
 -- Inserting data into products dimension
-INSERT INTO olap.dim_products
+INSERT INTO olap.dim_products (product_id, product_name, category, brand, screen_size)
 SELECT
     product_id,
     product_name,
@@ -60,7 +60,7 @@ FROM oltp.products;
 
 
 -- Inserting data into fact_sales table
-INSERT INTO olap.fact_sales
+INSERT INTO olap.fact_sales (client_id, product_id, date_id, order_id, quantity, unit_price, total_amount)
 SELECT
     o.client_id,
     oi.product_id,

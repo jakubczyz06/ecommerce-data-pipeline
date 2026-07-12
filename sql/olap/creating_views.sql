@@ -130,9 +130,9 @@ WITH category_counts AS (
             ORDER BY COUNT(*) DESC
             ) AS rnk
     FROM olap.fact_sales AS s
-    JOIN dim_products AS p
+    JOIN olap.dim_products AS p
     ON s.product_id = p.product_id
-    JOIN dim_clients AS c
+    JOIN olap.dim_clients AS c
     ON s.client_id = c.client_id
     GROUP BY s.client_id, c.full_name, p.category
 )
