@@ -14,6 +14,7 @@ from utils.logger import get_logger
 from dotenv import load_dotenv
 
 
+
 # Primary keys for each table in 'public' schema
 PRIMARY_KEYS = {
     "clients":          "client_id",
