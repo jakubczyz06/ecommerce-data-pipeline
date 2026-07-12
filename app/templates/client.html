@@ -59,7 +59,7 @@
             <div><dt>Average order value</dt>
                  <dd class="mono">${{ "{:,.2f}".format(summary.avg_order_value) if summary.avg_order_value else "0.00" }}</dd></div>
             <div><dt>Last order</dt>
-                 <dd class="mono">{{ summary.last_order_date.strftime("%Y-%m-%d") if summary.last_order_date else "—" }}</dd></div>
+                 <dd class="mono">{{ summary.last_order_date.strftime("%Y-%m-%d") if summary.last_order_date else "-" }}</dd></div>
         </dl>
     </div>
 
@@ -68,9 +68,9 @@
         <div class="churn risk-{{ churn.churn_risk | lower }}">
             <span class="churn-level">{{ churn.churn_risk }}</span>
             <p class="churn-detail">
-                Last purchase <strong class="mono">{{ churn.recency_days }}</strong> days ago -
-                this client usually buys every
-                <strong class="mono">{{ churn.avg_days_between if churn.avg_days_between else "-" }}</strong> days.
+                Last purchase <strong class="mono">{{ churn.recency_days }}</strong> days ago
+                (average interval:
+                <strong class="mono">{{ churn.avg_days_between if churn.avg_days_between else "-" }}</strong> days).
             </p>
         </div>
     </div>
