@@ -1,10 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}
+    {% if not_found %}Client not found{% else %}{{ contact.full_name }} — profile{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if not_found %}
+<section class="empty-state">
+    <h1>No client with ID <span class="mono">{{ client_id }}</span></h1>
+    <p>Check the ID and try again, or go back to the <a href="{{ url_for('home') }}">dashboard</a>.</p>
+</section>
+
+{% else %}
+
+<!-- Signature element: segment banner in medal colours -->
+<section class="segment-banner segment-{{ rfm.segment | lower }}">
+    <div class="banner-left">
+        <p class="eyebrow">Client profile</p>
+        <h1>{{ contact.full_name }}</h1>
+        <p class="banner-meta mono">
+            ID {{ contact.client_id }}
+            &middot; {{ summary.city }}, {{ summary.state }}, {{ summary.country }}
+        </p>
+    </div>
+
+    <div class="banner-right">
+        <div class="segment-label">
+            <span class="segment-name">{{ rfm.segment }}</span>
+            <span class="segment-sub">RFM segment</span>
+        </div>
+        <div class="rfm-tiles">
+            <div class="tile">
+                <span class="tile-score mono">{{ rfm.r_score }}</span>
+                <span class="tile-name">R</span>
+            </div>
+            <div class="tile">
+                <span class="tile-score mono">{{ rfm.f_score }}</span>
+                <span class="tile-name">F</span>
+            </div>
+            <div class="tile">
+                <span class="tile-score mono">{{ rfm.m_score }}</span>
+                <span class="tile-name">M</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="grid">
+
+    <div class="panel">
+        <div class="panel-head"><h2>Purchase summary</h2></div>
+        <dl class="kv">
+            <div><dt>Total orders</dt>
+                 <dd class="mono">{{ summary.total_orders }}</dd></div>
+            <div><dt>Total spent</dt>
+                 <dd class="mono">${{ "{:,.2f}".format(summary.total_spent) if summary.total_spent else "0.00" }}</dd></div>
+            <div><dt>Average order value</dt>
+                 <dd class="mono">${{ "{:,.2f}".format(summary.avg_order_value) if summary.avg_order_value else "0.00" }}</dd></div>
+            <div><dt>Last order</dt>
+                 <dd class="mono">{{ summary.last_order_date.strftime("%Y-%m-%d") if summary.last_order_date else "—" }}</dd></div>
+        </dl>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head"><h2>Churn risk</h2></div>
+        <div class="churn risk-{{ churn.churn_risk | lower }}">
+            <span class="churn-level">{{ churn.churn_risk }}</span>
+            <p class="churn-detail">
+                Last purchase <strong class="mono">{{ churn.recency_days }}</strong> days ago -
+                this client usually buys every
+                <strong class="mono">{{ churn.avg_days_between if churn.avg_days_between else "-" }}</strong> days.
+            </p>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head"><h2>Favourite category</h2></div>
+        {% if category %}
+        <dl class="kv">
+            <div><dt>Most bought</dt>
+                 <dd class="strong">{{ category.most_bought_category }}</dd></div>
+            <div><dt>Purchases in category</dt>
+                 <dd class="mono">{{ category.purchase_count }}</dd></div>
+            <div><dt>Spent in category</dt>
+                 <dd class="mono">${{ "{:,.2f}".format(category.category_spent) }}</dd></div>
+        </dl>
+        {% else %}
+        <p class="muted">No purchases yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <div class="panel-head"><h2>Contact</h2></div>
+        <dl class="kv">
+            <div><dt>Email</dt>
+                 <dd class="mono">{{ contact.email }}</dd></div>
+            <div><dt>Phone</dt>
+                 <dd class="mono">{{ contact.phone_number }}</dd></div>
+        </dl>
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

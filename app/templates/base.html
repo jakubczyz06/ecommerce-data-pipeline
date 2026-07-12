@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-commerce Analytics{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a href="{{ url_for('home') }}" class="brand">
+        <span class="brand-mark">EC</span>
+        <span class="brand-name">E-commerce Analytics</span>
+    </a>
+
+    <form class="search" action="{{ url_for('search') }}" method="get">
+        <input
+            type="text"
+            name="client_id"
+            placeholder="Search for a customer by ID, name, or phone number"
+            required
+        >
+        <button type="submit">Open profile</button>
+    </form>
+</header>
+
+<main class="page">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <span>Data source: PostgreSQL &middot; OLAP star schema</span>
+</footer>
+
+</body>
+</html>

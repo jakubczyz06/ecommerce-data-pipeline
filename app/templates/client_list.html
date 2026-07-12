@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} — E-commerce Analytics{% endblock %}
+
+{% block content %}
+
+<section class="hero list-hero {{ accent }}">
+    <p class="eyebrow">Client list</p>
+    <h1>{{ title }}</h1>
+    <p class="hero-sub">{{ subtitle }}</p>
+    <p class="list-count mono">{{ "{:,}".format(total) }} clients
+        &middot; page {{ page }} of {{ total_pages }}</p>
+</section>
+
+<section class="panel">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th class="mono">ID</th>
+                <th>Client</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th class="num">Orders</th>
+                <th class="num">Total spent</th>
+                <th class="num">{{ extra_label }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in clients %}
+            <tr onclick="window.location='{{ url_for('client_profile', client_id=c.client_id) }}'">
+                <td class="mono">{{ c.client_id }}</td>
+                <td class="strong">{{ c.full_name }}</td>
+                <td class="mono">{{ c.phone_number }}</td>
+                <td>{{ c.city }}, {{ c.state }}, {{ c.country }}</td>
+                <td class="num mono">{{ c.total_orders }}</td>
+                <td class="num mono">
+                    ${{ "{:,.2f}".format(c.total_spent) if c.total_spent else "0.00" }}
+                </td>
+                <td class="num mono">{{ c.extra_value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if total_pages > 1 %}
+    <nav class="pagination" aria-label="Pagination">
+        {% if page > 1 %}
+            <a class="page-btn" href="{{ request.path }}?page=1">&laquo; First</a>
+            <a class="page-btn" href="{{ request.path }}?page={{ page - 1 }}">&lsaquo; Prev</a>
+        {% else %}
+            <span class="page-btn disabled">&laquo; First</span>
+            <span class="page-btn disabled">&lsaquo; Prev</span>
+        {% endif %}
+
+        <span class="page-info mono">{{ page }} / {{ total_pages }}</span>
+
+        {% if page < total_pages %}
+            <a class="page-btn" href="{{ request.path }}?page={{ page + 1 }}">Next &rsaquo;</a>
+            <a class="page-btn" href="{{ request.path }}?page={{ total_pages }}">Last &raquo;</a>
+        {% else %}
+            <span class="page-btn disabled">Next &rsaquo;</span>
+            <span class="page-btn disabled">Last &raquo;</span>
+        {% endif %}
+    </nav>
+    {% endif %}
+</section>
+
+{% endblock %}

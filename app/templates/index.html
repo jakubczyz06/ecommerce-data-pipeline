@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - E-commerce Analytics{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <p class="eyebrow">Marketing analytics</p>
+    <h1>Find a client.<br>Know their value.</h1>
+    <p class="hero-sub">
+        Analyze customer RFM segmentation, churn risk, and purchasing behavior.
+    </p>
+</section>
+
+<section class="stat-row">
+    {% for s in segments %}
+    <a class="stat-card stat-link segment-{{ s.segment | lower }}"
+       href="{{ url_for('segment_list', segment_name=s.segment | lower) }}">
+        <span class="stat-label">{{ s.segment }} clients</span>
+        <span class="stat-value mono">{{ "{:,}".format(s.client_count) }}</span>
+    </a>
+    {% endfor %}
+    <a class="stat-card stat-link risk-high" href="{{ url_for('churn_list') }}">
+        <span class="stat-label">High churn risk</span>
+        <span class="stat-value mono">{{ "{:,}".format(high_risk) }}</span>
+    </a>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h2>Top clients by total spend</h2>
+        <span class="panel-hint">Click a row to open the profile</span>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th class="mono">ID</th>
+                <th>Client</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th class="num">Orders</th>
+                <th class="num">Total spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in top_clients %}
+            <tr onclick="window.location='{{ url_for('client_profile', client_id=c.client_id) }}'">
+                <td class="mono">{{ c.client_id }}</td>
+                <td class="strong">{{ c.full_name }}</td>
+                <td class="mono">{{ c.phone_number }}</td>
+                <td>{{ c.city }}, {{ c.state }}, {{ c.country }}</td>
+                <td class="num mono">{{ c.total_orders }}</td>
+                <td class="num mono">${{ "{:,.2f}".format(c.total_spent) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% endblock %}

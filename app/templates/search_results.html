@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Search: {{ query }} — E-commerce Analytics{% endblock %}
+
+{% block content %}
+
+{% if matches %}
+
+<section class="hero">
+    <p class="eyebrow">Search results</p>
+    <h1>{{ matches | length }} client{{ "s" if matches | length != 1 }} matching
+        &ldquo;{{ query }}&rdquo;</h1>
+    <p class="hero-sub">Pick the one you mean - locations help tell them apart.</p>
+</section>
+
+<section class="panel">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th class="mono">ID</th>
+                <th>Client</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th class="num">Orders</th>
+                <th class="num">Total spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in matches %}
+            <tr onclick="window.location='{{ url_for('client_profile', client_id=c.client_id) }}'">
+                <td class="mono">{{ c.client_id }}</td>
+                <td class="strong">{{ c.full_name }}</td>
+                <td class="mono">{{ c.phone_number }}</td>
+                <td>{{ c.city }}, {{ c.state }}, {{ c.country }}</td>
+                <td class="num mono">{{ c.total_orders }}</td>
+                <td class="num mono">
+                    ${{ "{:,.2f}".format(c.total_spent) if c.total_spent else "0.00" }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% else %}
+
+<section class="empty-state">
+    <h1>No clients matching &ldquo;{{ query }}&rdquo;</h1>
+    <p>Try a different spelling, a shorter fragment, or search by client ID.
+       Back to the <a href="{{ url_for('home') }}">dashboard</a>.</p>
+</section>
+
+{% endif %}
+
+{% endblock %}
