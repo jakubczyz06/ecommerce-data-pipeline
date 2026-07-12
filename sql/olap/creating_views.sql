@@ -98,19 +98,16 @@ SELECT
     ROUND(a.avg_days_between::NUMERIC, 1) AS avg_days_between,
     s.segment,
     CASE
-        WHEN s.segment = 'Gold' AND r.recency_days > 30  THEN 'High'
-        WHEN s.segment = 'Gold' AND r.recency_days > 22  THEN 'Medium'
-        WHEN s.segment = 'Silver' AND r.recency_days > 90  THEN 'High'
-        WHEN s.segment = 'Silver' AND r.recency_days > 70  THEN 'Medium'
-        WHEN s.segment = 'Bronze' AND r.recency_days > 150 THEN 'High'
-        WHEN s.segment = 'Bronze' AND r.recency_days > 110 THEN 'Medium'
+        WHEN a.avg_days_between IS NULL THEN 'Unknown'
+        WHEN r.recency_days > (a.avg_days_between * 4) THEN 'High'
+        WHEN r.recency_days > (a.avg_days_between * 2) THEN 'Medium'
         ELSE 'Low'
-    END AS churn_risk
+        END AS churn_risk
 FROM olap.v_rfm r
          JOIN olap.v_rfm_scored AS s
-             ON r.client_id = s.client_id
+              ON r.client_id = s.client_id
          LEFT JOIN avg_intervals AS a
-             ON r.client_id = a.client_id;
+                   ON r.client_id = a.client_id;
 
 
 
