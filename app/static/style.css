@@ -155,6 +155,7 @@ h1, h2 {
 }
 
 .footer {
+    text-align: center;
     padding: 1.2rem 2rem;
     border-top: 1px solid var(--line);
     color: var(--muted);
