@@ -107,7 +107,7 @@ Follow these steps to set up the project on your local machine.
 **1. Clone the repository and navigate to the directory:**
 
 ```bash
-git clone https://github.com/jakubczyz06ecommerce-data-pipeline.git
+git clone https://github.com/jakubczyz06/ecommerce-data-pipeline.git
 cd ecommerce-data-pipeline
 ```
 
