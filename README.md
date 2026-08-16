@@ -175,8 +175,3 @@ The dashboard will be available at `http://localhost:5000`.
 
 * [ ] **Workflow Orchestration:** Introduce Apache Airflow to schedule and monitor data pipeline runs.
 * [ ] **Machine Learning:** Implement an algorithm to predict customer churn risk.
-
----
-## License
-
-This project is licensed under the MIT License.
