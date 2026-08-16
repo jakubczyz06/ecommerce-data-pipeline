@@ -1,4 +1,4 @@
-# E-commerce-Analytics-Web-App
+# ecommerce-data-pipeline
 
 A full-stack web application and data engineering pipeline built for a made-up American electronics e-commerce retailer. This project provides a comprehensive dashboard for customer identification, behavioral analysis, and proactive retention using RFM segmentation and Churn Risk scoring.
 
@@ -107,8 +107,8 @@ Follow these steps to set up the project on your local machine.
 **1. Clone the repository and navigate to the directory:**
 
 ```bash
-git clone https://github.com/jakubczyz06/E-commerce-Analytics-Web-App.git
-cd E-commerce-Analytics-Web-App
+git clone https://github.com/jakubczyz06ecommerce-data-pipeline.git
+cd ecommerce-data-pipeline
 ```
 
 **2. Set up a virtual environment and install dependencies:**
