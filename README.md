@@ -4,6 +4,8 @@ A full-stack web application and data engineering pipeline built for the made-up
 
 This repository showcases an end-to-end data lifecycle: from generating synthetic datasets and building an ETL pipeline, to designing a Star Schema data warehouse (OLAP) and serving insights through a Flask web interface.
 
+![image alt](https://github.com/jakubczyz06/E-commerce-Analytics-Web-App/blob/3f57a8175a5b18c76e1869ca2e8842aacd4f2d54/docs/image1.png)
+
 ---
 
 ## Key Features
@@ -15,7 +17,7 @@ This repository showcases an end-to-end data lifecycle: from generating syntheti
 * **RFM Segmentation:** Automatically classifies customers into *Gold*, *Silver*, and *Bronze* tiers based on Recency, Frequency, and Monetary value.
 * **Churn Risk Scoring:** Calculates the probability of a customer leaving based on dynamic, per-segment thresholds.
 
-
+![image alt](https://github.com/jakubczyz06/E-commerce-Analytics-Web-App/blob/3f57a8175a5b18c76e1869ca2e8842aacd4f2d54/docs/image2.png)
 * **Interactive Flask Dashboard:** A user-friendly web interface featuring customer search, paginated lists of customer segments, and detailed individual profiles with purchase preferences and contact capabilities.
 
 ---
