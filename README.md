@@ -12,12 +12,17 @@ This repository showcases an end-to-end data lifecycle: from generating syntheti
 ## Key Features
 
 * **Custom Synthetic Data Generation:** Python script using `Faker` and `pandas` that generates a realistic, seeded dataset up to 5,000 clients, 260 electronic SKUs, and 50,000 orders.
+  
 * **End-to-End ETL Pipeline:** Automated extraction of CSV data, loading into a staging area (Raw), and transforming it into a fully normalized transactional database (OLTP).
+  
 * **Data Warehouse (Star Schema):** An analytical OLAP layer utilizing dimension and fact tables to optimize complex aggregations and reporting.
+  
 * **Advanced Customer Analytics:**
   * **RFM Segmentation:** classifies customers into *Gold*, *Silver*, and *Bronze* tiers based on Recency, Frequency, and Monetary value.
   * **Churn Risk Scoring:** calculates the probability of a customer leaving based on dynamic, per-segment thresholds.
+    
 * **Customer Details:** Shows all known details of each customer (their address, purchase summary, contact info, and favorite category).
+ 
 * **Interactive Flask Dashboard:** A user-friendly web interface featuring customer search, paginated lists of customer segments, and detailed individual profiles with purchase preferences and contact capabilities.
 
 ![Customer analysis page](docs/image2.png)
@@ -59,7 +64,9 @@ The data flows from raw generation through a structured database architecture be
 ## Tech Stack
 
 * **Data Engineering & Backend:** Python 3, pandas, numpy, Faker, SQLAlchemy, Flask, dotenv
+  
 * **Database:** PostgreSQL (OLTP & OLAP design, Views, Star Schema)
+  
 * **Frontend:** HTML5, CSS3, Jinja2 Templates
 
 ---
